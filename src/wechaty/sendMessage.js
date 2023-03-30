@@ -1,6 +1,6 @@
 // import { getChatGPTReply as getReply } from '../chatgpt/index.js'
 import { getOpenAiReply as getReply } from '../openai/index.js'
-import { botName, roomWhiteList, aliasWhiteList } from '../../config.js'
+import { botName, roomWhiteList, aliasWhiteList, noWhiteList } from '../../config.js'
 
 /**
  * 默认消息发送
@@ -19,7 +19,7 @@ export async function defaultMessage(msg, bot) {
   const name = await contact.name() // 微信名称
   const isText = msg.type() === bot.Message.Type.Text // 消息类型是否为文本
   const isRoom = roomWhiteList.includes(roomName) && content.includes(`${botName}`) // 是否在群聊白名单内并且艾特了机器人
-  const isAlias = true || aliasWhiteList.includes(remarkName) || aliasWhiteList.includes(name) // 发消息的人是否在联系人白名单内
+  const isAlias = aliasWhiteList.includes(remarkName) || aliasWhiteList.includes(name) // 发消息的人是否在联系人白名单内
   const isBotSelf = botName === remarkName || botName === name // 是否是机器人自己
   // TODO 你们可以根据自己的需求修改这里的逻辑
   if (isText && !isBotSelf) {
@@ -30,7 +30,8 @@ export async function defaultMessage(msg, bot) {
         return
       }
       // 私人聊天，白名单内的直接发送
-      if (isAlias && !room) {
+      // if (isAlias && !room) {
+      if (isAlias && !room && !noWhiteList.includes(name) && !noWhiteList.includes(remarkName)) {
         await contact.say(await getReply(content))
       }
     } catch (e) {

@@ -5,4 +5,5 @@ export const botName = '進哥'
 export const roomWhiteList = ['SHDQ 摆烂组']
 
 // 联系人白名单，白名单内的联系人才会自动回复
-export const aliasWhiteList = ['淼']
+export const aliasWhiteList = ['']
+export const noWhiteList = ['唐总', '李祥发',]
